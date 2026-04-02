@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Case Study — Adult Social Care | BI Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0f0e0c;
+      --paper: #f5f2eb;
+      --paper-warm: #ede9df;
+      --accent: #c84b2f;
+      --accent-soft: #f0ded9;
+      --teal: #2a6b6e;
+      --teal-soft: #d4e9ea;
+      --amber: #d4860a;
+      --amber-soft: #fdf0d5;
+      --muted: #6b6761;
+      --border: #d8d3c8;
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'DM Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    /* NOISE TEXTURE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* NAVIGATION */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: rgba(245, 242, 235, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-back-btn {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 0.45rem 1rem;
+      border-radius: 2rem;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .nav-back-btn:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 5rem;
+    }
+
+    .hero-left {
+      padding: 6rem 4rem 6rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 2rem;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      line-height: 1.15;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 38ch;
+      margin-bottom: 3rem;
+      line-height: 1.8;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+
+    .meta-item label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .meta-item span {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .hero-right {
+      padding: 6rem 3rem 6rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--paper-warm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-right::before {
+      content: '"';
+      font-family: var(--serif);
+      font-size: 20rem;
+      color: var(--border);
+      position: absolute;
+      top: -3rem;
+      left: -1rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .pull-quote {
+      font-family: var(--serif);
+      font-size: clamp(1.2rem, 2vw, 1.6rem);
+      line-height: 1.55;
+      font-style: italic;
+      color: var(--ink);
+      position: relative;
+      z-index: 1;
+      margin-bottom: 2rem;
+    }
+
+    .pull-quote strong {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .outcome-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--teal);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 2rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      width: fit-content;
+    }
+
+    .outcome-pill::before {
+      content: '→';
+    }
+
+    /* MAIN CONTENT */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 3rem;
+    }
+
+    /* SECTION STYLES */
+    section {
+      padding: 6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-child { border-bottom: none; }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-number {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      padding-top: 0.4rem;
+      white-space: nowrap;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .body-text {
+      max-width: 65ch;
+      margin-left: calc(2ch + 3rem);
+    }
+
+    .body-text p {
+      margin-bottom: 1.4rem;
+      color: #2a2825;
+    }
+
+    .body-text p:last-child { margin-bottom: 0; }
+
+    /* HIGHLIGHT BOX */
+    .highlight-box {
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0 2rem calc(2ch + 3rem);
+      border-radius: 0 6px 6px 0;
+    }
+
+    .highlight-box p {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    /* ANOMALY STAT */
+    .anomaly-stat {
+      margin: 2.5rem 0 2.5rem calc(2ch + 3rem);
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      background: var(--paper-warm);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+    }
+
+    .anomaly-number {
+      font-family: var(--serif);
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .anomaly-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .anomaly-label strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--ink);
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+
+    /* KPI GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 2.5rem 0;
+    }
+
+    .kpi-card {
+      background: var(--paper);
+      padding: 1.75rem;
+      position: relative;
+    }
+
+    .kpi-card.alert { background: var(--accent-soft); }
+    .kpi-card.positive { background: var(--teal-soft); }
+    .kpi-card.warning { background: var(--amber-soft); }
+
+    .kpi-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .kpi-value {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .kpi-card.alert .kpi-value { color: var(--accent); }
+    .kpi-card.positive .kpi-value { color: var(--teal); }
+    .kpi-card.warning .kpi-value { color: var(--amber); }
+
+    .kpi-mom {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .kpi-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 0.5rem;
+    }
+
+    /* VISUAL CALLOUT */
+    .visual-callout {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 2.5rem 0;
+    }
+
+    .visual-callout-header {
+      background: var(--ink);
+      color: white;
+      padding: 1rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .visual-callout-header span {
+      opacity: 0.5;
+      font-size: 0.65rem;
+    }
+
+    .visual-body {
+      padding: 2rem;
+      background: var(--paper-warm);
+    }
+
+    /* SCATTER VISUAL */
+    .scatter-area {
+      position: relative;
+      height: 220px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .scatter-axis-x {
+      position: absolute;
+      bottom: 2rem;
+      left: 2.5rem;
+      right: 1rem;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .scatter-axis-y {
+      position: absolute;
+      left: 2.5rem;
+      top: 1rem;
+      bottom: 2rem;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .scatter-dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform 0.2s;
+    }
+
+    .scatter-dot:hover { transform: translate(-50%, -50%) scale(1.5); }
+    .scatter-dot.normal { background: var(--teal); opacity: 0.6; }
+    .scatter-dot.high { background: var(--accent); opacity: 0.85; }
+
+    .scatter-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+
+    .scatter-label.x-label {
+      position: absolute;
+      bottom: 0.2rem;
+      right: 1rem;
+    }
+
+    .scatter-label.y-label {
+      position: absolute;
+      top: 0.5rem;
+      left: 2.7rem;
+    }
+
+    .scatter-legend {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .scatter-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* GANTT VISUAL */
+    .gantt-area {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .gantt-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .gantt-row:last-child { margin-bottom: 0; }
+
+    .gantt-carer {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      width: 5rem;
+      flex-shrink: 0;
+    }
+
+    .gantt-track {
+      flex: 1;
+      height: 28px;
+      background: var(--paper-warm);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .gantt-bar {
+      position: absolute;
+      height: 100%;
+      border-radius: 4px;
+      top: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .gantt-bar.ok { background: var(--teal); }
+    .gantt-bar.overlap { background: var(--accent); opacity: 0.9; }
+    .gantt-bar.ghost { background: var(--border); color: var(--muted); }
+
+    /* DURATION HISTOGRAM */
+    .histogram {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 120px;
+      padding: 0 0 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.75rem;
+    }
+
+    .hist-bar {
+      flex: 1;
+      border-radius: 3px 3px 0 0;
+      transition: opacity 0.2s;
+      position: relative;
+    }
+
+    .hist-bar:hover { opacity: 0.8; }
+    .hist-bar.normal { background: var(--teal); }
+    .hist-bar.anomaly { background: var(--accent); }
+
+    .hist-labels {
+      display: flex;
+      gap: 3px;
+    }
+
+    .hist-label {
+      flex: 1;
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* INSIGHT CARDS */
+    .insight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2.5rem 0 2.5rem calc(2ch + 3rem);
+    }
+
+    .insight-card {
+      padding: 1.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--paper);
+      position: relative;
+    }
+
+    .insight-card::before {
+      content: attr(data-icon);
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .insight-card h4 {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .insight-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ETHICAL SECTION */
+    .ethics-section {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 6rem 3rem;
+      margin: 0 -3rem;
+    }
+
+    .ethics-section .section-number { color: rgba(245,242,235,0.4); }
+    .ethics-section .section-title { color: var(--paper); }
+    .ethics-section .section-title em { color: #e8977f; }
+    .ethics-section .body-text p { color: rgba(245,242,235,0.8); }
+
+    .ethics-pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2.5rem 0 0 calc(2ch + 3rem);
+    }
+
+    .pillar {
+      border-top: 2px solid rgba(245,242,235,0.15);
+      padding-top: 1.5rem;
+    }
+
+    .pillar-number {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: rgba(245,242,235,0.4);
+      margin-bottom: 0.5rem;
+    }
+
+    .pillar h4 {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      margin-bottom: 0.6rem;
+      color: var(--paper);
+    }
+
+    .pillar p {
+      font-size: 0.82rem;
+      color: rgba(245,242,235,0.6);
+      line-height: 1.6;
+    }
+
+    /* OUTCOME SECTION */
+    .outcome-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 3rem;
+      align-items: start;
+      margin: 2.5rem 0 2.5rem calc(2ch + 3rem);
+    }
+
+    .outcome-stat-block {
+      background: var(--teal);
+      color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .outcome-big {
+      font-family: var(--serif);
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .outcome-desc {
+      font-size: 0.82rem;
+      opacity: 0.85;
+      line-height: 1.5;
+    }
+
+    .outcome-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .outcome-list li {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.9rem;
+      color: #2a2825;
+      line-height: 1.6;
+    }
+
+    .outcome-list li::before {
+      content: '→';
+      color: var(--teal);
+      font-weight: 500;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    /* SCREENSHOT PLACEHOLDER */
+    .screenshot-placeholder {
+      background: var(--paper-warm);
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 3rem 2rem;
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+
+    .screenshot-placeholder p {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-back {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .footer-back:hover { color: var(--ink); }
+
+    .footer-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-tag { animation: fadeUp 0.6s ease both; }
+    .hero-title { animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-subtitle { animation: fadeUp 0.6s 0.2s ease both; }
+    .meta-grid { animation: fadeUp 0.6s 0.3s ease both; }
+    .pull-quote { animation: fadeUp 0.6s 0.4s ease both; }
+    .outcome-pill { animation: fadeUp 0.6s 0.5s ease both; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-left { padding: 5rem 1.5rem 3rem; border-right: none; border-bottom: 1px solid var(--border); }
+      .hero-right { padding: 3rem 1.5rem; }
+      main { padding: 0 1.5rem; }
+      .body-text { margin-left: 0; }
+      .insight-grid { grid-template-columns: 1fr; margin-left: 0; }
+      .ethics-pillars { grid-template-columns: 1fr; margin-left: 0; }
+      .outcome-row { grid-template-columns: 1fr; margin-left: 0; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .ethics-section { padding: 4rem 1.5rem; margin: 0 -1.5rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="../index.html" class="nav-logo" style="text-decoration:none;">← Victoria Ao</a>
+    <ul class="nav-links">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#discovery">Discovery</a></li>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#ethics">Ethics</a></li>
+      <li><a href="#outcome">Outcome</a></li>
+    </ul>
+    <a href="../index.html" class="nav-back-btn">← All Projects</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-tag">Adult Social Care · Operational BI</div>
+      <h1 class="hero-title">
+        When the Data Says<br>
+        <em>On Time</em> But Clients<br>
+        Say Otherwise
+      </h1>
+      <p class="hero-subtitle">
+        A punctuality paradox hiding a systemic flaw — and how interrogating a single anomaly 
+        changed how an entire care operation was scheduled.
+      </p>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <label>Industry</label>
+          <span>Adult Social Care</span>
+        </div>
+        <div class="meta-item">
+          <label>Tools</label>
+          <span>Power BI · SQL</span>
+        </div>
+        <div class="meta-item">
+          <label>Audience</label>
+          <span>Service Managers · Care Coordinators</span>
+        </div>
+        <div class="meta-item">
+          <label>Outcome</label>
+          <span>Workload redistribution + travel time policy</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <p class="pull-quote">
+        "The system logged visits as completed. Clients reported carers were constantly late. 
+        Both were telling the truth — the data just hadn't caught the <strong>lag in between.</strong>"
+      </p>
+      <div class="outcome-pill">Operations restructured carer scheduling</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- PROBLEM -->
+    <section id="problem">
+      <div class="section-header">
+        <div class="section-number">01 / 05</div>
+        <h2 class="section-title">The <em>Punctuality Paradox</em></h2>
+      </div>
+      <div class="body-text">
+        <p>
+          A care provider was fielding a growing volume of client complaints. The recurring theme: 
+          carers arriving late. Some clients reported this was happening regularly, affecting their 
+          routines and trust in the service.
+        </p>
+        <p>
+          The operational data told a different story. Punctuality metrics were green. 
+          Visits were logging as completed on time. There was no obvious signal in the dashboard 
+          that anything was wrong.
+        </p>
+      </div>
+
+      <div class="highlight-box">
+        <p>The question wasn't <em>why are carers late</em> — it was <em>why doesn't our data know they're late.</em></p>
+      </div>
+
+      <div class="body-text">
+        <p>
+          Rather than starting with the visit logs, I started where the signal was clearest: 
+          the complaints data. Lateness dominated. It clustered in specific geographic areas 
+          and certain time slots. That told me where to look next.
+        </p>
+      </div>
+    </section>
+
+    <!-- DISCOVERY -->
+    <section id="discovery">
+      <div class="section-header">
+        <div class="section-number">02 / 05</div>
+        <h2 class="section-title">Finding the <em>12-Hour Anomaly</em></h2>
+      </div>
+      <div class="body-text">
+        <p>
+          Pulling the visit log data, I began calculating visit durations by comparing 
+          check-in timestamps against check-out timestamps. Almost immediately, something 
+          didn't add up.
+        </p>
+      </div>
+
+      <div class="anomaly-stat">
+        <div class="anomaly-number">12hrs+</div>
+        <div class="anomaly-label">
+          <strong>Visits logging at impossible durations</strong>
+          A care visit doesn't last 12 hours. These were unclosed sessions — 
+          the system logging a new check-in as the close of the previous visit.
+        </div>
+      </div>
+
+      <div class="body-text">
+        <p>
+          The average visit duration for the business was being distorted upward significantly. 
+          This wasn't data noise — it was a systemic logging lag. When a carer checked in to a 
+          new visit, the previous visit wasn't always closing properly, creating overlapping 
+          records and inflating completion rates.
+        </p>
+        <p>
+          The system registered visits as punctual. In reality, those visits hadn't properly ended.
+        </p>
+      </div>
+
+      <!-- DURATION HISTOGRAM -->
+      <div class="visual-callout">
+        <div class="visual-callout-header">
+          Visit Duration Distribution <span>Illustrative · based on actual pattern</span>
+        </div>
+        <div class="visual-body">
+          <div class="histogram">
+            <div class="hist-bar normal" style="height:95%" title="<30 min"></div>
+            <div class="hist-bar normal" style="height:80%" title="30-60 min"></div>
+            <div class="hist-bar normal" style="height:55%" title="60-90 min"></div>
+            <div class="hist-bar normal" style="height:30%" title="90-120 min"></div>
+            <div class="hist-bar normal" style="height:15%" title="2-4 hrs"></div>
+            <div class="hist-bar normal" style="height:8%" title="4-6 hrs"></div>
+            <div class="hist-bar anomaly" style="height:42%" title="6hrs+ ANOMALY"></div>
+          </div>
+          <div class="hist-labels">
+            <div class="hist-label">&lt;30m</div>
+            <div class="hist-label">30–60m</div>
+            <div class="hist-label">60–90m</div>
+            <div class="hist-label">90–120m</div>
+            <div class="hist-label">2–4h</div>
+            <div class="hist-label">4–6h</div>
+            <div class="hist-label" style="color:var(--accent);font-weight:500">6h+ ⚠</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="body-text">
+        <p>
+          The next question: who was this affecting most? Cross-referencing overlapping visits 
+          against carer workload revealed a consistent pattern.
+        </p>
+      </div>
+
+      <!-- SCATTER PLOT -->
+      <div class="visual-callout">
+        <div class="visual-callout-header">
+          Overlap Count vs. Carer Workload <span>Each dot = one carer · one month</span>
+        </div>
+        <div class="visual-body">
+          <div class="scatter-area">
+            <div class="scatter-axis-x"></div>
+            <div class="scatter-axis-y"></div>
+            <span class="scatter-label x-label">Workload (visits/month) →</span>
+            <span class="scatter-label y-label">↑ Overlapping visits</span>
+
+            <!-- Normal dots (low workload, low overlap) -->
+            <div class="scatter-dot normal" style="left:15%;bottom:20%"></div>
+            <div class="scatter-dot normal" style="left:20%;bottom:15%"></div>
+            <div class="scatter-dot normal" style="left:18%;bottom:25%"></div>
+            <div class="scatter-dot normal" style="left:28%;bottom:18%"></div>
+            <div class="scatter-dot normal" style="left:32%;bottom:22%"></div>
+            <div class="scatter-dot normal" style="left:25%;bottom:30%"></div>
+            <div class="scatter-dot normal" style="left:40%;bottom:28%"></div>
+            <div class="scatter-dot normal" style="left:38%;bottom:20%"></div>
+            <div class="scatter-dot normal" style="left:45%;bottom:35%"></div>
+            <div class="scatter-dot normal" style="left:50%;bottom:32%"></div>
+            <div class="scatter-dot normal" style="left:55%;bottom:38%"></div>
+            <div class="scatter-dot normal" style="left:48%;bottom:42%"></div>
+
+            <!-- High workload, high overlap (red) -->
+            <div class="scatter-dot high" style="left:65%;bottom:55%"></div>
+            <div class="scatter-dot high" style="left:70%;bottom:62%"></div>
+            <div class="scatter-dot high" style="left:75%;bottom:68%"></div>
+            <div class="scatter-dot high" style="left:80%;bottom:72%"></div>
+            <div class="scatter-dot high" style="left:85%;bottom:78%"></div>
+            <div class="scatter-dot high" style="left:78%;bottom:58%"></div>
+            <div class="scatter-dot high" style="left:88%;bottom:82%"></div>
+          </div>
+          <div class="scatter-legend">
+            <div class="scatter-legend-item">
+              <div class="legend-dot" style="background:var(--teal);opacity:0.7"></div>
+              Standard workload — low overlap
+            </div>
+            <div class="scatter-legend-item">
+              <div class="legend-dot" style="background:var(--accent)"></div>
+              High workload — high overlap (the pattern)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <p>
+          The carers with the most overlapping visits weren't the least experienced. 
+          They were the <em>busiest</em> — the ones the operation relied on most.
+        </p>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard">
+      <div class="section-header">
+        <div class="section-number">03 / 05</div>
+        <h2 class="section-title">The <em>Dashboard Design</em></h2>
+      </div>
+      <div class="body-text">
+        <p>
+          The dashboard needed to work for two different audiences — service managers who needed 
+          the headline picture fast, and care coordinators who managed individuals day to day. 
+          Two pages, each with a distinct purpose.
+        </p>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card positive">
+          <div class="kpi-label">Total Visits</div>
+          <div class="kpi-value">1,847</div>
+          <div class="kpi-mom">↑ 3.2% vs last month</div>
+        </div>
+        <div class="kpi-card positive">
+          <div class="kpi-label">Complete Check-in & Out</div>
+          <div class="kpi-value">74%</div>
+          <div class="kpi-mom">↓ 1.4% vs last month</div>
+        </div>
+        <div class="kpi-card alert">
+          <div class="kpi-label">Overlapping Visits</div>
+          <div class="kpi-value">312</div>
+          <div class="kpi-mom">↑ 18% vs last month</div>
+          <div class="kpi-note">Concentrated in high-workload carers</div>
+        </div>
+        <div class="kpi-card warning">
+          <div class="kpi-label">Missed Check-ins</div>
+          <div class="kpi-value">89</div>
+          <div class="kpi-mom">↑ 7% vs last month</div>
+        </div>
+        <div class="kpi-card warning">
+          <div class="kpi-label">Incomplete Check-ins</div>
+          <div class="kpi-value">143</div>
+          <div class="kpi-mom">↓ 2% vs last month</div>
+        </div>
+        <div class="kpi-card alert">
+          <div class="kpi-label">Avg Visit Duration</div>
+          <div class="kpi-value">3.4h</div>
+          <div class="kpi-mom">Expected: ~45 min</div>
+          <div class="kpi-note">⚠ Inflated by unclosed sessions</div>
+        </div>
+      </div>
+
+      <div class="body-text">
+        <p>
+          Colour language was deliberate throughout: red and amber signal system failures — 
+          overlaps, missed check-ins — never individual performance. Blue and teal indicate 
+          volume and completion. Red never points at a person. Only at a process.
+        </p>
+        <p>
+          The carer-level view included a Gantt-style timeline for any selected day. 
+          Overlapping bars — two visits occupying the same time slot — were immediately 
+          visible and undeniable at the individual level.
+        </p>
+      </div>
+
+      <!-- GANTT -->
+      <div class="visual-callout">
+        <div class="visual-callout-header">
+          Carer Visit Timeline · Selected Day <span>Gantt view · Page 2</span>
+        </div>
+        <div class="visual-body">
+          <div class="gantt-area">
+            <div class="gantt-row">
+              <div class="gantt-carer">Carer A</div>
+              <div class="gantt-track">
+                <div class="gantt-bar ok" style="left:5%;width:18%">08:00</div>
+                <div class="gantt-bar ok" style="left:26%;width:16%">10:15</div>
+                <div class="gantt-bar ok" style="left:45%;width:20%">13:00</div>
+                <div class="gantt-bar ok" style="left:68%;width:15%">16:30</div>
+              </div>
+            </div>
+            <div class="gantt-row">
+              <div class="gantt-carer">Carer B</div>
+              <div class="gantt-track">
+                <div class="gantt-bar ok" style="left:5%;width:18%">08:00</div>
+                <div class="gantt-bar overlap" style="left:20%;width:20%">09:45 ⚠</div>
+                <div class="gantt-bar overlap" style="left:37%;width:19%">11:30 ⚠</div>
+                <div class="gantt-bar ok" style="left:60%;width:18%">14:00</div>
+                <div class="gantt-bar overlap" style="left:75%;width:20%">16:00 ⚠</div>
+              </div>
+            </div>
+            <div class="gantt-row">
+              <div class="gantt-carer">Carer C</div>
+              <div class="gantt-track">
+                <div class="gantt-bar ok" style="left:8%;width:20%">08:30</div>
+                <div class="gantt-bar ok" style="left:32%;width:18%">11:00</div>
+                <div class="gantt-bar ghost" style="left:53%;width:15%">missed</div>
+                <div class="gantt-bar ok" style="left:72%;width:18%">15:30</div>
+              </div>
+            </div>
+            <div class="gantt-row">
+              <div class="gantt-carer">Carer D</div>
+              <div class="gantt-track">
+                <div class="gantt-bar ok" style="left:5%;width:16%">08:00</div>
+                <div class="gantt-bar overlap" style="left:18%;width:22%">09:30 ⚠</div>
+                <div class="gantt-bar overlap" style="left:36%;width:20%">11:15 ⚠</div>
+                <div class="gantt-bar overlap" style="left:53%;width:20%">13:30 ⚠</div>
+                <div class="gantt-bar overlap" style="left:70%;width:20%">15:45 ⚠</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:1.5rem;font-size:0.72rem;color:var(--muted);">
+            <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:12px;height:12px;background:var(--teal);border-radius:2px;display:inline-block"></span>Completed</span>
+            <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:12px;height:12px;background:var(--accent);border-radius:2px;display:inline-block"></span>Overlapping ⚠</span>
+            <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:12px;height:12px;background:var(--border);border-radius:2px;display:inline-block"></span>Missed check-in</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <p>📸 Dashboard screenshots · Insert Power BI exports here</p>
+      </div>
+
+    </section>
+
+    <!-- ETHICS -->
+  </main>
+
+  <div class="ethics-section" id="ethics">
+    <main>
+      <section style="border:none;padding:0">
+        <div class="section-header">
+          <div class="section-number">04 / 05</div>
+          <h2 class="section-title">The <em>Ethical Dimension</em></h2>
+        </div>
+        <div class="body-text">
+          <p>
+            This case sits at an uncomfortable intersection. Data that could easily have been 
+            used to performance-manage individual carers was actually evidence of a systemic 
+            failure in scheduling design.
+          </p>
+          <p>
+            Getting the framing right — and presenting the findings in a way that protected 
+            carers while giving operations something actionable — was as important as the 
+            analysis itself. In adult social care, the people in the data are vulnerable. 
+            The people delivering the care are often undervalued. Both deserve to have the 
+            data used carefully.
+          </p>
+        </div>
+        <div class="ethics-pillars">
+          <div class="pillar">
+            <div class="pillar-number">I</div>
+            <h4>Protect, don't surveil</h4>
+            <p>High-overlap carers were cross-referenced with workload first. The data was never used to discipline — only to understand.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-number">II</div>
+            <h4>Design language matters</h4>
+            <p>Colour coding was set up so red pointed to process failures, never to individuals. A design choice with a real ethical consequence.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-number">III</div>
+            <h4>Question the system, not the person</h4>
+            <p>The most important analytical move was asking why the data was wrong before asking who was performing badly.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <main>
+
+    <!-- OUTCOME -->
+    <section id="outcome">
+      <div class="section-header">
+        <div class="section-number">05 / 05</div>
+        <h2 class="section-title">What <em>Changed</em></h2>
+      </div>
+      <div class="body-text">
+        <p>
+          Operations used the findings to open a conversation about travel time — something 
+          that had never been formally factored into scheduling. Back-to-back visits in 
+          different locations were the norm. The data now showed exactly where that was 
+          breaking down.
+        </p>
+      </div>
+
+      <div class="outcome-row">
+        <div class="outcome-stat-block">
+          <div class="outcome-big">0</div>
+          <div class="outcome-desc">
+            Carers performance-managed as a result of this data
+          </div>
+        </div>
+        <ul class="outcome-list">
+          <li>Travel time formally factored into carer scheduling for the first time</li>
+          <li>Workloads redistributed based on geographic clustering and visit volume</li>
+          <li>Logging system flagged for review — lag behaviour escalated to supplier</li>
+          <li>Ongoing dashboard monitoring adopted by care coordinators as standard practice</li>
+          <li>Client complaint volume used as a leading indicator alongside operational data going forward</li>
+        </ul>
+      </div>
+
+      <div class="highlight-box">
+        <p>
+          The complaints about lateness didn't reflect carers failing. They reflected a scheduling 
+          system that hadn't accounted for the reality of the job. <em>The data made that undeniable.</em>
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="../index.html" class="footer-back">← Back to Portfolio</a>
+    <div class="footer-tag">Adult Social Care · Operational BI · Power BI · SQL</div>
+  </footer>
+
+</body>
+</html>
